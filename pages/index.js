@@ -1,12 +1,20 @@
 import Head from "next/head";
 import Image from "next/image";
+import Navbar from "../components/Navbar";
+import PreviewFileSection from "../components/PreviewFileSection";
+import UploadFile from "../components/UploadFile";
+import RunningIcon from "../components/widgets/RunningIcon";
 
 export default function Home() {
   return (
-    <div>
-      <div className="flex justify-center font-poppins items-center w-full h-screen font-bold text-4xl">
-        Hello next
+    <>
+      <Navbar />
+      <UploadFile />
+      <PreviewFileSection />
+      {/* RUNNING ICON */}
+      <div className="flex justify-center items-center w-full mt-16">
+        <RunningIcon isRunning={false}/>
       </div>
-    </div>
+    </>
   );
 }
