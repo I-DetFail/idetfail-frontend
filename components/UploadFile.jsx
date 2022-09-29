@@ -4,11 +4,7 @@ import { FiUpload } from "react-icons/fi";
 import Button from "./widgets/Button";
 
 const UploadFile = () => {
-  const [isRunning, setIsRunning] = useState(false);
 
-  const handleUploadModel = () => {};
-  const handleUploadData = () => {};
-  const handleRunningSimulation = () => {};
 
   return (
     <>
