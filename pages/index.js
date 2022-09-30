@@ -102,7 +102,7 @@ export default function Home() {
       {/* OPEN MODAL */}
       {openModal && (
         <div className="z-50">
-          <ModalComponent onClose={() => setOpenModal(false)} />
+          <ModalComponent onClose={() => setOpenModal(false)} type="knowlegdeBase" />
         </div>
       )}
     </>
