@@ -3,7 +3,20 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import Loading from "../components/Loading";
 import bgKereta from "../public/kereta_cover.png";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { setIsLogin, setDataUser } from "../redux/auth/authSlice";
+import { useRouter } from "next/router";
+import { checkIfAlreadyAuthorized } from "../middlewares/authorizationPage";
+
+// VALIDATE ROUTE IN SERVER SIDE
+export async function getServerSideProps(context) {
+  await checkIfAlreadyAuthorized(context);
+
+  return {
+    props: {}, // will be passed to the page component as props
+  };
+}
 
 const register = () => {
   const [name, setName] = useState("");
@@ -13,6 +26,9 @@ const register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const doSignUp = async (e) => {
     e.preventDefault();
@@ -33,14 +49,20 @@ const register = () => {
 
     const resultJson = await result.json();
 
-    if (result.status === 200) {
+    if (result.status === 201) {
       setIsLoading(false);
-      // navigate
+      toast.success(`${resultJson.message}. Please go to login`, {
+        position: "top-center",
+      });
+      router.push("/login");
     }
+
     if (resultJson.error) {
       toast.error(resultJson.error, {
         position: "top-center",
       });
+      dispatch(setIsLogin(false));
+      dispatch(setDataUser({}));
     }
 
     console.log("resultJson :", resultJson);

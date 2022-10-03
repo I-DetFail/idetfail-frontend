@@ -4,12 +4,29 @@ import bgKereta from "../public/kereta_cover.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../components/Loading";
+import { useSelector, useDispatch } from "react-redux";
+import { setIsLogin, setDataUser } from "../redux/auth/authSlice";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { checkIfAlreadyAuthorized } from "../middlewares/authorizationPage";
+
+// VALIDATE ROUTE IN SERVER SIDE
+export async function getServerSideProps(context) {
+  await checkIfAlreadyAuthorized(context);
+
+  return {
+    props: {}, // will be passed to the page component as props
+  };
+}
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -30,19 +47,25 @@ const Login = () => {
         Accept: "application/json",
       },
     });
+
     const resultJson = await result.json();
 
     if (result.status === 200) {
       setIsLoading(false);
-      // navigate
+      Cookies.set("loginStatus", resultJson.success, { expires: 1 });
+
+      // navigate to home
+      router.push("/");
     }
-    if (resultJson.message) {
+    if (resultJson.success !== true) {
       toast.error(resultJson.message, {
         position: "top-center",
       });
+      dispatch(setIsLogin(false));
+      dispatch(setDataUser({}));
     }
 
-    console.log("resultJson :", resultJson);
+    // console.log("resultJson :", resultJson);
     setIsLoading(false);
   };
 

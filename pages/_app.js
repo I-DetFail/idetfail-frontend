@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import { store } from "../store";
+import { store } from "../redux/store";
 import { Provider } from "react-redux";
 import NextNProgress from "nextjs-progressbar";
 
