@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setIsLogin, setDataUser } from "../redux/auth/authSlice";
 import { useRouter } from "next/router";
 import { checkIfAlreadyAuthorized } from "../middlewares/authorizationPage";
+import Link from "next/link";
 
 // VALIDATE ROUTE IN SERVER SIDE
 export async function getServerSideProps(context) {
@@ -181,6 +182,16 @@ const register = () => {
                   onChange={(e) => setRepeatPassword(e.target.value)}
                 />
               </div>
+            </div>
+
+            {/* LINK TO Login */}
+            <div className="flex justify-start items-center gap-1 text-sm mt-4">
+              <h1>
+                Already have an account ?{" "}
+                <span className="text-blue-primary-app font-semibold hover:cursor-pointer hover:underline">
+                  <Link href="/login">Login</Link>
+                </span>
+              </h1>
             </div>
 
             {/* Button */}

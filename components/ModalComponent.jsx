@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
-const ModalComponent = ({ onClose, type }) => {
+const ModalComponent = ({ onClose, type, handleClickButton }) => {
   return (
     <>
       <div
@@ -45,7 +45,7 @@ const ModalComponent = ({ onClose, type }) => {
               </h1>
 
               <div className="flex justify-center items-center gap-16 mt-8 text-sm">
-                <button className="flex justify-center items-center py-2 px-6  rounded-md border-2 bg-opacity-40 hover:bg-blue-primary-app hover:text-white hover:border-blue-primary-app">
+                <button onClick={handleClickButton} className="flex justify-center items-center py-2 px-6  rounded-md border-2 bg-opacity-40 hover:bg-blue-primary-app hover:text-white hover:border-blue-primary-app">
                   yes, logout
                 </button>
                 <button

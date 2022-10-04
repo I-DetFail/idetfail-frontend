@@ -7,13 +7,13 @@ import Loading from "../components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import { setIsLogin, setDataUser } from "../redux/auth/authSlice";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import axios from "axios";
 import Cookies from "js-cookie";
 import { checkIfAlreadyAuthorized } from "../middlewares/authorizationPage";
 
 // VALIDATE ROUTE IN SERVER SIDE
 export async function getServerSideProps(context) {
-  await checkIfAlreadyAuthorized(context);
-
   return {
     props: {}, // will be passed to the page component as props
   };
@@ -40,8 +40,11 @@ const Login = () => {
     data.append("email", email);
     data.append("password", password);
 
+    
+
     const result = await fetch("http://108.136.40.55/api/user/login", {
       method: "POST",
+      // credentials: "include",
       body: data,
       headers: {
         Accept: "application/json",
@@ -52,10 +55,17 @@ const Login = () => {
 
     if (result.status === 200) {
       setIsLoading(false);
-      Cookies.set("loginStatus", resultJson.success, { expires: 1 });
+      toast.success(resultJson.message, {
+        position: "top-center",
+      });
+
+      console.log()
 
       // navigate to home
-      router.push("/");
+      // router.push("/");
+         console.log(result.headers['Set-Cookie']
+
+         );
     }
     if (resultJson.success !== true) {
       toast.error(resultJson.message, {
@@ -133,6 +143,16 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
+            </div>
+
+            {/* LINK TO REGISTER */}
+            <div className="flex justify-start items-center gap-1 text-sm mt-4">
+              <h1>
+                Dont have an account ?{" "}
+                <span className="text-blue-primary-app font-semibold hover:cursor-pointer hover:underline">
+                  <Link href="/register">Sign Up</Link>
+                </span>
+              </h1>
             </div>
 
             {/* Button */}

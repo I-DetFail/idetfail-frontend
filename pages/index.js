@@ -14,36 +14,70 @@ import StatusSimulation from "../components/StatusSimulation";
 import ResultStatus from "../components/ResultStatus";
 import Button from "../components/widgets/Button";
 import ModalComponent from "../components/ModalComponent";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { checkIfNotAuthorized } from "../middlewares/authorizationPage";
+import { setUserProfile } from "../redux/auth/userProfileSlice";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 const descDummy =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
 // VALIDATE ROUTE IN SERVER SIDE
 export async function getServerSideProps(context) {
-  await checkIfNotAuthorized(context);
-
-  // FETCH DATA FROM API
-  const result = await fetch("http://108.136.40.55/api/user/profile", {
-    method: "GET"
-  })
-
-  const resultJson = await result.json()
-
-  if(result.status === 200){
-
-  }
-
-
+  // const result = await fetch("http://108.136.40.55/api/user/profile", {
+  //   headers: {
+  //     Accept: "application/json",
+  //   },
+  // });
+  // const resultJson = await result.json();
+  // if (resultJson.success === false) {
+  //   return {
+  //     redirect: {
+  //       destination: "/login",
+  //       permanent: false,
+  //     },
+  //   };
+  // } else {
+  //   return {
+  //     props: {resultJson},
+  //     redirect: {
+  //       destination: "/",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
   return {
-    props: {}, // will be passed to the page component as props
+    props: {},
   };
 }
 
-export default function Home() {
+export default function Home({}) {
   const [openModal, setOpenModal] = useState(false);
+  const [userData, setUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { userProfile } = useSelector((state) => state.userProfile);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const result = await fetch("http://108.136.40.55/api/user/profile", {
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+    const resultJson = await result.json();
+    setUserData(resultJson);
+  };
 
   const handleOpenModal = () => {
     setOpenModal(!openModal);
@@ -52,6 +86,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
+      <h1>{JSON.stringify(userData)}</h1>
       <UploadFile />
       <PreviewFileSection />
       {/* RUNNING ICON */}
@@ -132,6 +167,7 @@ export default function Home() {
           />
         </div>
       )}
+      <ToastContainer />
     </>
   );
 }
